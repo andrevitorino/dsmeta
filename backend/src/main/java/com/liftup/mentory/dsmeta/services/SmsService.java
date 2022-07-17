@@ -14,7 +14,7 @@ import com.twilio.type.PhoneNumber;
 public class SmsService {
 
 	@Value("${twilio.sid}")
-	private String twilioSid;
+	private String twiliosid;
 
 	@Value("${twilio.key}")
 	private String twilioKey;
@@ -24,12 +24,12 @@ public class SmsService {
 
 	@Value("${twilio.phone.to}")
 	private String twilioPhoneTo;
-
+	
 	@Autowired
 	private SaleRepository saleRepository;
 	
 	public void sendSms(Long saleId) {
-
+		
 		Sale sale = saleRepository.findById(saleId).get();
 		
 		String date = sale.getDate().getMonthValue() + "/" + sale.getDate().getYear();
@@ -37,13 +37,13 @@ public class SmsService {
 		String msg = "Vendedor " + sale.getSellerName() + " foi destaque em " + date 
 				+ " com um total de R$ " + String.format("%.2f", sale.getAmount());
 		
-		Twilio.init(twilioSid, twilioKey);
-
+		Twilio.init(twiliosid, twilioKey);
+		
 		PhoneNumber to = new PhoneNumber(twilioPhoneTo);
 		PhoneNumber from = new PhoneNumber(twilioPhoneFrom);
-
+		
 		Message message = Message.creator(to, from, msg).create();
-
+		
 		System.out.println(message.getSid());
 	}
 	
